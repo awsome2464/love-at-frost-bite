@@ -11,6 +11,7 @@ label start:
     play sound footsteps_snow
     pause 5
     play sound door_creak_short
+    pause 1
     $renpy.music.set_volume(volume=0.1, delay=3.0, channel='ambience')
     scene bg lobby with longdissolve
     $renpy.notify(message="Resort Lobby")
