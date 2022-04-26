@@ -24,7 +24,7 @@ label start:
     "...but I know that she prefers this sort of atmosphere as opposed to a tropical resort."
     "Of course, that doesn't mean she's against such a thing."
     "In fact, she's the one who decided to have our honeymoon be at the beach."
-    "Man...{w=0.5} What a time that was."
+    "Man...{w=0.5}\nWhat a time that was."
     stop music fadeout 1.0
     stop ambience fadeout 1.0
     scene bg white with meddissolve
