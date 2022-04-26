@@ -64,6 +64,7 @@ style slider:
     ysize gui.slider_size
     base_bar Frame("gui/slider/horizontal_[prefix_]bar.png", gui.slider_borders, tile=gui.slider_tile)
     thumb "gui/slider/horizontal_[prefix_]thumb.png"
+    #thumb_offset 8
 
 style vslider:
     xsize gui.slider_size
@@ -122,14 +123,13 @@ screen say(who, what):
         xalign 0.5
         yalign 0.99
 
-        textbutton _("Back") action Rollback()
-        textbutton _("History") action ShowMenu('history')
-        textbutton _("Skip") action Skip() alternate Skip(fast=True, confirm=True)
-        textbutton _("Auto") action Preference("auto-forward", "toggle")
-        textbutton _("Save") action ShowMenu('save')
-        textbutton _("Q.Save") action QuickSave()
-        textbutton _("Q.Load") action QuickLoad()
-        textbutton _("Prefs") action ShowMenu('preferences')
+        textbutton _("Back") text_style "quick_menu" action Rollback()
+        textbutton _("Skip") text_style "quick_menu" action Skip() alternate Skip(fast=True, confirm=True)
+        textbutton _("Auto") text_style "quick_menu" action Preference("auto-forward", "toggle")
+        textbutton _("Save/Load") text_style "quick_menu" action ShowMenu('file_slots')
+        textbutton _("Options") text_style "quick_menu" action ShowMenu('preferences')
+        textbutton _("Main Menu") text_style "quick_menu" action [Function(takeScreenshot), MainMenu()]
+        textbutton _("Quit") text_style "quick_menu" action Quit()
 
 
 ## Make the namebox available for styling through the Character object.
@@ -421,10 +421,10 @@ screen game_menu(title, scroll=None, yinitial=0.0):
 
     style_prefix "game_menu"
 
-    if main_menu:
-        add gui.main_menu_background
-    else:
-        add gui.game_menu_background
+    # if main_menu:
+    #     add gui.main_menu_background
+    # else:
+    #     add gui.game_menu_background
 
     frame:
         style "game_menu_outer_frame"
@@ -597,80 +597,121 @@ screen load():
     use file_slots(_("Load"))
 
 
-screen file_slots(title):
+screen file_slots():
+    tag mm
+    modal True
+    default page_name_value = FilePageNameInputValue(pattern=_("File {}"), auto=_("Automatic saves"), quick=_("Quick saves"))
+    default currentPage = FileCurrentPage()
 
-    default page_name_value = FilePageNameInputValue(pattern=_("Page {}"), auto=_("Automatic saves"), quick=_("Quick saves"))
+    if not main_menu:
+        add "bg fade"
 
-    use game_menu(title):
+    fixed:
 
-        fixed:
+        ## This ensures the input will get the enter event before any of the
+        ## buttons do.
+        order_reverse True
 
-            ## This ensures the input will get the enter event before any of the
-            ## buttons do.
-            order_reverse True
+        ## The page name, which can be edited by clicking on a button.
+        # button:
+        #     style "page_label"
 
-            ## The page name, which can be edited by clicking on a button.
-            button:
-                style "page_label"
+        #     key_events True
+        #     xalign 0.5 yalign 0.04
+        #     action NullAction()#page_name_value.Toggle()
 
-                key_events True
-                xalign 0.5
-                action page_name_value.Toggle()
+        #     input:
+        #         style "page_label_text"
+        #         value page_name_value
 
-                input:
-                    style "page_label_text"
-                    value page_name_value
+        ## The grid of file slots.
+        grid gui.file_slot_cols gui.file_slot_rows:
+            style_prefix "slot"
 
-            ## The grid of file slots.
-            grid gui.file_slot_cols gui.file_slot_rows:
-                style_prefix "slot"
+            xalign 0.5
+            yalign 0.3
 
-                xalign 0.5
-                yalign 0.5
+            spacing gui.slot_spacing
 
-                spacing gui.slot_spacing
+            for i in range(gui.file_slot_cols * gui.file_slot_rows):
 
-                for i in range(gui.file_slot_cols * gui.file_slot_rows):
+                $ slot = i + 1
 
-                    $ slot = i + 1
+                vbox:
+                    frame:
+                        xpadding 30 ypadding 30
+                        vbox:
+                            add FileScreenshot(slot) xalign 0.5
+                            null height 10
+                            text FileTime(slot, format=("File " + currentPage + " - {#file_time}%B %d %Y, %H:%M"), empty=("File " + currentPage + " - Empty")) xalign 0.5
+                    null height 10
+                    hbox:
+                        xalign 0.5
+                        if not main_menu:
+                            frame:
+                                xysize(200, 100)
+                                textbutton "Save" text_style "menu_buttons" xalign 0.5 yalign 0.5 action FileSave(slot)
+                            null width 10
+                        frame:
+                            xysize(200, 100)
+                            textbutton "Load" text_style "menu_buttons" xalign 0.5 yalign 0.5 action [Function(takeScreenshot), FileLoad(slot)]
+                        null width 10
+                        frame:
+                            xysize(200, 100)
+                            textbutton "Delete" text_style "menu_buttons" xalign 0.5 yalign 0.5 action FileDelete(slot, confirm=True)
 
-                    button:
-                        action FileAction(slot)
+                # button:
+                #     action NullAction()#FileAction(slot)
 
-                        has vbox
+                #     has vbox
 
-                        add FileScreenshot(slot) xalign 0.5
+                #     add FileScreenshot(slot) xalign 0.5
 
-                        text FileTime(slot, format=_("{#file_time}%A, %B %d %Y, %H:%M"), empty=_("empty slot")):
-                            style "slot_time_text"
+                #     text FileTime(slot, format=_("{#file_time}%A, %B %d %Y, %H:%M"), empty=_("empty slot")):
+                #         style "slot_time_text"
 
-                        text FileSaveName(slot):
-                            style "slot_name_text"
+                #     text FileSaveName(slot):
+                #         style "slot_name_text"
 
-                        key "save_delete" action FileDelete(slot)
+                #     key "save_delete" action FileDelete(slot)
 
-            ## Buttons to access other pages.
+        ## Buttons to access other pages.
+        frame:
+            xalign 0.5 yalign 0.875
+            xpadding 40 ypadding 15
             hbox:
                 style_prefix "page"
+                xalign 0.5 yalign 0.5
+                spacing 5
 
-                xalign 0.5
-                yalign 1.0
+                textbutton _("{size=+20}<{/size}") text_style "menu_buttons":
+                    xalign 0.5 yalign 0.5
+                    action [SetScreenVariable("currentPage", str(int(FileCurrentPage()) - 1)), FilePagePrevious(auto=False, quick=False)]
+                text "Previous File" xalign 0.5 yalign 0.5
+                null width 50
+                text "Next File" xalign 0.5 yalign 0.5
 
-                spacing gui.page_spacing
+                # if config.has_autosave:
+                #     textbutton _("{#auto_page}A") action FilePage("auto")
 
-                textbutton _("<") action FilePagePrevious()
-
-                if config.has_autosave:
-                    textbutton _("{#auto_page}A") action FilePage("auto")
-
-                if config.has_quicksave:
-                    textbutton _("{#quick_page}Q") action FilePage("quick")
+                # if config.has_quicksave:
+                #     textbutton _("{#quick_page}Q") action FilePage("quick")
 
                 ## range(1, 10) gives the numbers from 1 to 9.
-                for page in range(1, 10):
-                    textbutton "[page]" action FilePage(page)
+                # for page in range(1, 11):
+                #     textbutton "[page]" action FilePage(page)
 
-                textbutton _(">") action FilePageNext()
+                textbutton _("{size=+20}>{/size}") text_style "menu_buttons":
+                    xalign 0.5 yalign 0.5
+                    action [SetScreenVariable("currentPage", str(int(FileCurrentPage()) + 1)), FilePageNext()]
+
+    frame:
+        xalign 0.5 yalign 0.96
+        xpadding 20 ypadding 10
+        if main_menu:
+            textbutton _("Return") text_style "menu_buttons" xalign 0.5 yalign 0.5 action Jump("main_menu")
+        else:
+            textbutton _("Return") text_style "menu_buttons" xalign 0.5 yalign 0.5 action Return()
 
 
 style page_label is gui_label
@@ -691,6 +732,7 @@ style page_label_text:
     text_align 0.5
     layout "subtitle"
     hover_color gui.hover_color
+    size 50
 
 style page_button:
     properties gui.button_properties("page_button")
@@ -714,12 +756,18 @@ style slot_button_text:
 
 screen preferences():
 
-    tag menu
+    tag mm
 
-    use game_menu(_("Preferences"), scroll="viewport"):
-
+    if not main_menu:
+        add "bg fade"
+    # use game_menu(_("Preferences"), scroll="viewport"):
+    frame:
+        if main_menu:
+            background None
+        xalign 0.5 yalign 0.5
+        xpadding 50 ypadding 50
         vbox:
-
+            xalign 0.5 yalign 0.5
             hbox:
                 box_wrap True
 
@@ -799,6 +847,13 @@ screen preferences():
                             action Preference("all mute", "toggle")
                             style "mute_all_button"
 
+    frame:
+        xalign 0.25 yalign 0.75
+        xpadding 20 ypadding 10
+        if main_menu:
+            textbutton _("Return") text_style "menu_buttons" xalign 0.5 yalign 0.5 action Jump("main_menu")
+        else:
+            textbutton _("Return") text_style "menu_buttons" xalign 0.5 yalign 0.5 action Return()
 
 style pref_label is gui_label
 style pref_label_text is gui_label_text

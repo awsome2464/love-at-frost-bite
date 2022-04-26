@@ -37,7 +37,7 @@ define gui.about = _p("""
 ## distribution. This must be ASCII-only, and must not contain spaces, colons,
 ## or semicolons.
 
-define build.name = "LoveatFrostBite"
+define build.name = "LaFB"
 
 
 ## Sounds and music ############################################################
@@ -48,7 +48,7 @@ define build.name = "LoveatFrostBite"
 
 define config.has_sound = True
 define config.has_music = True
-define config.has_voice = True
+define config.has_voice = False
 
 
 ## To allow the user to play a test sound on the sound or voice channel,
@@ -84,7 +84,7 @@ define config.intra_transition = dissolve
 
 ## A transition that is used after a game has been loaded.
 
-define config.after_load_transition = None
+define config.after_load_transition = dissolve
 
 
 ## Used when entering the main menu after the game has ended.

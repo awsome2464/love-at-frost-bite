@@ -26,14 +26,14 @@ init python:
 define gui.accent_color = u'#0099ff'
 
 ## The color used for a text button when it is neither selected nor hovered.
-define gui.idle_color = u'#aaaaaa'
+define gui.idle_color = u'#000000'
 
 ## The small color is used for small text, which needs to be brighter/darker to
 ## achieve the same effect.
 define gui.idle_small_color = u'#0099ff'
 
 ## The color that is used for buttons and bars that are hovered.
-define gui.hover_color = u'#000000'
+define gui.hover_color = u'#0099ff'
 
 ## The color used for a text button when it is selected but not focused. A
 ## button is selected if it is the current screen or preference value.
@@ -209,8 +209,8 @@ define gui.choice_button_borders = Borders(150, 8, 150, 8)
 define gui.choice_button_text_font = gui.text_font
 define gui.choice_button_text_size = gui.text_size
 define gui.choice_button_text_xalign = 0.5
-define gui.choice_button_text_idle_color = "#cccccc"
-define gui.choice_button_text_hover_color = "#ffffff"
+define gui.choice_button_text_idle_color = "#000000"
+define gui.choice_button_text_hover_color = "#cccccc"
 define gui.choice_button_text_insensitive_color = "#444444"
 
 
@@ -221,9 +221,9 @@ define gui.choice_button_text_insensitive_color = "#444444"
 ## image files in gui/button, like the other kinds of buttons.
 
 ## The save slot button.
-define gui.slot_button_width = 414
-define gui.slot_button_height = 309
-define gui.slot_button_borders = Borders(15, 15, 15, 15)
+define gui.slot_button_width = None
+define gui.slot_button_height = None
+define gui.slot_button_borders = None
 define gui.slot_button_text_size = 21
 define gui.slot_button_text_xalign = 0.5
 define gui.slot_button_text_idle_color = gui.idle_small_color
@@ -231,12 +231,12 @@ define gui.slot_button_text_selected_idle_color = gui.selected_color
 define gui.slot_button_text_selected_hover_color = gui.hover_color
 
 ## The width and height of thumbnails used by the save slots.
-define config.thumbnail_width = 384
-define config.thumbnail_height = 216
+define config.thumbnail_width = 928
+define config.thumbnail_height = 522
 
 ## The number of columns and rows in the grid of save slots.
-define gui.file_slot_cols = 3
-define gui.file_slot_rows = 2
+define gui.file_slot_cols = 1
+define gui.file_slot_rows = 1
 
 
 ## Positioning and Spacing #####################################################
@@ -267,10 +267,10 @@ define gui.pref_spacing = 15
 define gui.pref_button_spacing = 0
 
 ## The spacing between file page buttons.
-define gui.page_spacing = 0
+define gui.page_spacing = 15
 
 ## The spacing between file slots.
-define gui.slot_spacing = 15
+define gui.slot_spacing = 0
 
 ## The position of the main menu text.
 define gui.main_menu_text_xalign = 1.0
@@ -314,7 +314,6 @@ define gui.slider_size = 38
 define gui.bar_tile = False
 define gui.scrollbar_tile = False
 define gui.slider_tile = False
-
 ## Horizontal borders.
 define gui.bar_borders = Borders(6, 6, 6, 6)
 define gui.scrollbar_borders = Borders(6, 6, 6, 6)
