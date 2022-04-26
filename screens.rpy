@@ -660,21 +660,6 @@ screen file_slots():
                             xysize(200, 100)
                             textbutton "Delete" text_style "menu_buttons" xalign 0.5 yalign 0.5 action FileDelete(slot, confirm=True)
 
-                # button:
-                #     action NullAction()#FileAction(slot)
-
-                #     has vbox
-
-                #     add FileScreenshot(slot) xalign 0.5
-
-                #     text FileTime(slot, format=_("{#file_time}%A, %B %d %Y, %H:%M"), empty=_("empty slot")):
-                #         style "slot_time_text"
-
-                #     text FileSaveName(slot):
-                #         style "slot_name_text"
-
-                #     key "save_delete" action FileDelete(slot)
-
         ## Buttons to access other pages.
         frame:
             xalign 0.5 yalign 0.875
