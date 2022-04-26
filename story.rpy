@@ -38,7 +38,7 @@ label start:
     "But of course, the greatest sight of them all..."
     window hide
     pause 1
-    show wife base sad smile bikini_top bikini_bottom at middle with dissolve
+    show wife base sad smile bikini_top bikini_bottom at middle with middissolve
     pause 1
     window show
     "...was my beautiful wife."
