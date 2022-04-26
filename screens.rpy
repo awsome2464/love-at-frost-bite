@@ -612,18 +612,6 @@ screen file_slots():
         ## buttons do.
         order_reverse True
 
-        ## The page name, which can be edited by clicking on a button.
-        # button:
-        #     style "page_label"
-
-        #     key_events True
-        #     xalign 0.5 yalign 0.04
-        #     action NullAction()#page_name_value.Toggle()
-
-        #     input:
-        #         style "page_label_text"
-        #         value page_name_value
-
         ## The grid of file slots.
         grid gui.file_slot_cols gui.file_slot_rows:
             style_prefix "slot"
