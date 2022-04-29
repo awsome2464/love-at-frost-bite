@@ -259,7 +259,20 @@ screen quick_menu():
 
     ## Ensure this appears on top of other screens.
     zorder 100
-    pass
+    if quick_menu:
+        hbox:
+            style_prefix "quick"
+
+            xalign 0.01
+            yalign 0.99
+
+            textbutton _("Back") text_style "quick_menu" action Rollback()
+            textbutton _("Skip") text_style "quick_menu" action Skip() alternate Skip(fast=True, confirm=True)
+            textbutton _("Auto") text_style "quick_menu" action Preference("auto-forward", "toggle")
+            textbutton _("Save/Load") text_style "quick_menu" action ShowMenu('file_slots')
+            textbutton _("Options") text_style "quick_menu" action ShowMenu('preferences')
+            textbutton _("Main Menu") text_style "quick_menu" action [Function(takeScreenshot), MainMenu()]
+            textbutton _("Quit") text_style "quick_menu" action Quit()
 
 
 ## This code ensures that the quick_menu screen is displayed in-game, whenever
@@ -604,7 +617,7 @@ screen file_slots():
     default currentPage = FileCurrentPage()
 
     if not main_menu:
-        add "bg fade"
+        add "fade"
 
     fixed:
 
@@ -664,16 +677,6 @@ screen file_slots():
                 null width 50
                 text "Next File" xalign 0.5 yalign 0.5
 
-                # if config.has_autosave:
-                #     textbutton _("{#auto_page}A") action FilePage("auto")
-
-                # if config.has_quicksave:
-                #     textbutton _("{#quick_page}Q") action FilePage("quick")
-
-                ## range(1, 10) gives the numbers from 1 to 9.
-                # for page in range(1, 11):
-                #     textbutton "[page]" action FilePage(page)
-
                 textbutton _("{size=+20}>{/size}") text_style "menu_buttons":
                     xalign 0.5 yalign 0.5
                     action [SetScreenVariable("currentPage", str(int(FileCurrentPage()) + 1)), FilePageNext()]
@@ -732,7 +735,7 @@ screen preferences():
     tag mm
 
     if not main_menu:
-        add "bg fade"
+        add "fade"
     # use game_menu(_("Preferences"), scroll="viewport"):
     frame:
         if main_menu:

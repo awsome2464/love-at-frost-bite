@@ -1,4 +1,5 @@
 label start:
+    $quick_menu = False
     stop music fadeout 3.0
     stop sound fadeout 3.0
     scene bg black
@@ -38,11 +39,12 @@ label start:
     "But of course, the greatest sight of them all..."
     window hide
     pause 1
-    show wife base sad smile bikini_top bikini_bottom at middle with middissolve
+    show wife base sad smile at middle with meddissolve
     pause 1
     window show
     "...was my beautiful wife."
     window hide
+    $quick_menu = True
 label customize_wife:
     $renpy.block_rollback()
     show wife
@@ -52,6 +54,7 @@ label customize_wife:
 label wife_finished:
     hide screen change_wife
     show wife at left with easeinright
+    $quick_menu = False
     window show
     "Are you satisfied with the wife's appearance?\nIt can not be changed later.{nw}"
     menu:
@@ -60,11 +63,13 @@ label wife_finished:
             jump satisfied
         "I'm not satisfied":
             window hide
+            $quick_menu = True
             show wife at middle with easeinleft
             jump customize_wife
 
 label satisfied:
     $renpy.block_rollback()
+    $quick_menu = False
     window hide
     show wife at middle with easeinleft
     window show
@@ -108,12 +113,33 @@ label entered_surname:
     "With another nod, I took out my driver's license, as well as my wife's, and handed them over to him."
     c "Alright, let's see..."
 
+label customize_husband:
+    $renpy.block_rollback()
+    $customChar = "husband"
+    window hide
+    $quick_menu = True
+    if renpy.get_screen("license"):
+        hide screen license
+        show screen license("husband")
+    else:
+        show fade with dissolve
+        pause 0.5
+        show screen license("husband")
+        with dissolve
+    pause
+
 label enter_husband_name:
+    hide fade
     $husband = renpy.input("Enter the husband's name.", length=20, default=husband, allow=inputCharacters)
     $husband.strip()
+    hide screen license
     if not husband:
+        $quick_menu = False
+        window show
         "Come on, now; I have a name."
         jump enter_husband_name
+    $quick_menu = False
+    window show
     c "So you're Mr. [husband] [surname]?{nw}"
     menu:
         c "So you're Mr. [husband] [surname]?{fast}"
@@ -148,12 +174,14 @@ label entered_wife_name:
     play sound door_creak_short
     "I then heard the front door creak open behind me."
     "Turning around, I found the one responsible."
+    $wifeTop = "coat"
+    $wifeBottom = "jeans"
     scene bg lobby with dissolve
     pause 1
-    show wife base level blank coat_base coat_breasts coat_sleeves jeans at middle with dissolve
+    show wife base level sleeves_1 blank foggy_lenses at middle with dissolve
     w "Whew! It's freezing out there!"
     h "You can say that again.{w=0.5} Were you able to find a decent parking spot?"
-    w sad "Barely.{w=0.5} It's still quite a walk away."
+    w sad clear_lenses "Barely.{w=0.5} It's still quite a walk away."
     w level "Then again, maybe it just feels that way because I can barely see 3 feet in front of me."
     w mad "Probably would've helped if I had someone out here to look with me."
     h "You're the one who wanted to save time by getting checked in as soon as possible."
@@ -193,5 +221,27 @@ label entered_wife_name:
     stop ambience fadeout 3
     scene bg black with longdissolve
     pause 2
+    $renpy.music.set_volume(volume=0.1, delay=0, channel='ambience')
+    play ambience wind fadein 3
+    scene bg bedroom with longdissolve
+    pause 1
+    window show
+    h "Alright, that should be the last of them."
+    show wife base sleeves_1 clear_lenses smile sad at middle with dissolve
+    w "Whew. That's a relief."
+    play music bedroom_normal
+    "Now that all the hard work was done, my wife took off her coat and plopped down onto the bed."
+    $wifeTop = "sweater"
+    with meddissolve
+    pause 0.5
+    w "Wow...{w=0.5} Talk about comfy!"
+    h "You think so?"
+    w level "Come on. See for yourself."
+    "She lightly tapped the other side of the bed."
+    "Accepting her offer, I walked to the empty side and laid down."
+    h "Oh, wow!"
+    w sad "Told ya!"
+
+label game_end:
     $takeScreenshot()
     return

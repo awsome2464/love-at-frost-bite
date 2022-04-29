@@ -18,25 +18,53 @@ define hairColors = ["#fff59d", "#5e4b3b", "#262626", "#c65d00", "#d5d5d5", "#ff
 define eyeColors = ["#5f523b", "#69b35f", "#0086e1", "#ffec00", "#ededed", "#e30000"]
 define earringColors = ["#aaaaaa", "#222222", "#ffffff", "#a58a00"]
 define glassesColors = ["#000000", "#b0b0b0", "#d3b600"]
-default bodyTypes = ["01"]
-default hairStyles = ["01", "02", "03", "04", "05", "06", "07", "08", "09"]
-default eyeShapes = ["01", "02", "03"]
-default pupilShapes = ["01", "02"]
-default noseShapes = ["01", "02", "03", "04", "05"]
-default mouthShapes = ["01", "02", "03"]
-default breastSizes = ["01", "02", "03"]
-default headShapes = ["01", "02"]
-default earringStyles = ["01", "02", "03", "04"]
-default glassesStyles = ["01", "02", "03"]
 
-default hairColor = hairColors[0]
-default bodyColor = skinColors[0]
-default pupilColor = eyeColors[0]
-default earringColor = earringColors[0]
-default glassesColor = glassesColors[0]
-default wife = ""
+default hairStylesH = ["01", "02"]
+default eyeShapesH = ["01", "02"]
+default pupilShapesH = ["01", "02"]
+default noseShapesH = ["01", "02"]
+default mouthShapesH = ["01", "02"]
+default headShapesH = ["01", "02"]
+default earringStylesH = ["01", "02"]
+default glassesStylesH = ["01", "02"]
+
+default hairStylesW = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10"]
+default eyeShapesW = ["01", "02", "03"]
+default pupilShapesW = ["01", "02"]
+default noseShapesW = ["01", "02", "03", "04", "05"]
+default mouthShapesW = ["01", "02", "03", "04"]
+default breastSizes = ["01", "02", "03"]
+default headShapesW = ["01", "02"]
+default earringStylesW = ["01", "02", "03", "04"]
+default glassesStylesW = ["01", "02", "03"]
+
+default hairColorH = hairColors[0]
+default bodyColorH = skinColors[0]
+default pupilColorH = eyeColors[0]
+default earringColorH = earringColors[0]
+default glassesColorH = glassesColors[0]
+
+default hairColorW = hairColors[0]
+default bodyColorW = skinColors[0]
+default pupilColorW = eyeColors[0]
+default earringColorW = earringColors[0]
+default glassesColorW = glassesColors[0]
+
+default glassesFog = False
 default husband = ""
 default surname = ""
+default wife = ""
+default wifeBottom = "bikini"
+default wifeTop = "bikini"
+
+default husbandDesign = {"hairNumber": "01", 
+"eyeballNumber": "01", 
+"pupilNumber": "01", 
+"headNumber": "01", 
+"noseNumber": "01", 
+"mouthNumber": "01", 
+"earringNumber": "01", 
+"glassesNumber": "01"}
 
 default wifeDesign = {"bodyNumber": "01", 
 "hairNumber": "01", 
@@ -49,6 +77,8 @@ default wifeDesign = {"bodyNumber": "01",
 "earringNumber": "01", 
 "armNumber": "01", 
 "glassesNumber": "01"}
+
+default customChar = "wife"
 
 default nextSkin = False
 default nextHead = False
@@ -107,15 +137,17 @@ style splash:
     size 50
 
 # Standard Images
+image fade:
+    "bg black"
+    alpha 0.75
 image good_tales = "Good Tales.png"
+image license = "license.png"
 image title = "title.png"
 
 # Backgrounds
 image bg beach = "backgrounds/beach.png"
+image bg bedroom = "#9ac1ff"
 image bg black = "#000000"
-image bg fade:
-    "bg black"
-    alpha 0.75
 image bg front_desk = "#f09d00"
 image bg lobby = "#ae7200"
 layeredimage bg main_menu:
@@ -200,148 +232,188 @@ image snowfall_fg = SnowBlossom("snow 01.png", count=300, border=5, xspeed=(0,-1
 # Text Images
 image splashtext = ParameterizedText(style="splash")
 
+# Husband Images
+image husband_hair_back:
+    "husband/hair back/%s.png" % husbandDesign["hairNumber"]
+    matrixcolor TintMatrix(hairColorH)
+image husband_head:
+    "husband/head/%s.png" % husbandDesign["headNumber"]
+    matrixcolor TintMatrix(bodyColorH)
+image husband_eyeballs:
+    "husband/eyeballs/%s.png" % husbandDesign["eyeballNumber"]
+image husband_pupils:
+    "husband/pupils/%s.png" % husbandDesign["pupilNumber"]
+    matrixcolor TintMatrix(pupilColorH)
+image husband_nose:
+    "husband/nose/%s.png" % husbandDesign["noseNumber"]
+    matrixcolor TintMatrix(bodyColorH)
+image husband_mouth:
+    "husband/mouth/%s.png" % husbandDesign["mouthNumber"]
+    matrixcolor TintMatrix(bodyColorH)
+image husband_hair_shadow:
+    "husband/hair shadow/%s.png" % husbandDesign["hairNumber"]
+    matrixcolor TintMatrix(bodyColorH)
+    alpha 0.75
+image husband_hair_top:
+    "husband/hair top/%s.png" % husbandDesign["hairNumber"]
+    matrixcolor TintMatrix(hairColorH)
+image husband_eyebrows:
+    "husband/eyebrows/01.png"
+    matrixcolor TintMatrix(hairColorH)
+
 # Wife Images
-image hair_back:
+image wife_hair_back:
     "wife/hair back/%s.png" % wifeDesign["hairNumber"]
-    matrixcolor TintMatrix(hairColor)
-image body:
-    "wife/body/%s.png" % wifeDesign["bodyNumber"]
-    matrixcolor TintMatrix(bodyColor)
-image arms:
+    matrixcolor TintMatrix(hairColorW)
+image wife_body:
+    "wife/body/01.png"
+    matrixcolor TintMatrix(bodyColorW)
+image wife_arms:
     "wife/arms/%s.png" % wifeDesign["armNumber"]
-    matrixcolor TintMatrix(bodyColor)
+    matrixcolor TintMatrix(bodyColorW)
 image breasts:
     "wife/breasts/%s.png" % wifeDesign["breastNumber"]
-    matrixcolor TintMatrix(bodyColor)
-image head:
+    matrixcolor TintMatrix(bodyColorW)
+image wife_head:
     "wife/head/%s.png" % wifeDesign["headNumber"]
-    matrixcolor TintMatrix(bodyColor)
-image earrings:
+    matrixcolor TintMatrix(bodyColorW)
+image wife_earrings:
     "wife/earrings/%s.png" % wifeDesign["earringNumber"]
-    matrixcolor TintMatrix(earringColor)
-image eyeballs:
+    matrixcolor TintMatrix(earringColorW)
+image wife_eyeballs:
     "wife/eyeballs/%s.png" % wifeDesign["eyeballNumber"]
-image pupils:
+image wife_pupils:
     "wife/pupils/%s.png" % wifeDesign["pupilNumber"]
-    matrixcolor TintMatrix(pupilColor)
-image nose:
+    matrixcolor TintMatrix(pupilColorW)
+image wife_nose:
     "wife/nose/%s.png" % wifeDesign["noseNumber"]
-    matrixcolor TintMatrix(bodyColor)
-image glasses_frames:
+    matrixcolor TintMatrix(bodyColorW)
+image wife_glasses_frames:
     "wife/glasses/%s_frames.png" % wifeDesign["glassesNumber"]
-    matrixcolor TintMatrix(glassesColor)
-image glasses_lenses:
+    matrixcolor TintMatrix(glassesColorW)
+image wife_glasses_lenses:
     "wife/glasses/%s_lenses.png" % wifeDesign["glassesNumber"]
+image wife_glasses_lenses_fog:
+    "wife_glasses_lenses"
+    alpha 0.8
+    ease 5 alpha 0.2
 
-image mouth_blank:
+image wife_mouth_blank:
     "wife/mouth/%s_blank.png" % wifeDesign["mouthNumber"]
-    matrixcolor TintMatrix(bodyColor)
-image mouth_smile:
+    matrixcolor TintMatrix(bodyColorW)
+image wife_mouth_smile:
     "wife/mouth/%s_smile.png" % wifeDesign["mouthNumber"]
-    matrixcolor TintMatrix(bodyColor)
+    matrixcolor TintMatrix(bodyColorW)
 
-image hair_shadow:
+image wife_hair_shadow:
     "wife/hair shadow/%s.png" % wifeDesign["hairNumber"]
-    matrixcolor TintMatrix(bodyColor)
+    matrixcolor TintMatrix(bodyColorW)
     alpha 0.75
-image hair_top:
+image wife_hair_top:
     "wife/hair top/%s.png" % wifeDesign["hairNumber"]
-    matrixcolor TintMatrix(hairColor)
+    matrixcolor TintMatrix(hairColorW)
 
-image eyebrows_level:
+image wife_eyebrows_level:
     "wife/eyebrows/01.png"
-    matrixcolor TintMatrix(hairColor)
-image eyebrows_sad:
+    matrixcolor TintMatrix(hairColorW)
+image wife_eyebrows_sad:
     "wife/eyebrows/02.png"
-    matrixcolor TintMatrix(hairColor)
-image eyebrows_mad:
+    matrixcolor TintMatrix(hairColorW)
+image wife_eyebrows_mad:
     "wife/eyebrows/03.png"
-    matrixcolor TintMatrix(hairColor)
+    matrixcolor TintMatrix(hairColorW)
 
-image bikini_bottom = "wife/outfits/bikini/bottom.png"
-layeredimage bikini_top:
-    if wifeDesign["breastNumber"] == "01":
-        "wife/outfits/bikini/top_small.png"
-    elif wifeDesign["breastNumber"] == "02":
-        "wife/outfits/bikini/top_medium.png"
-    elif wifeDesign["breastNumber"] == "03":
-        "wife/outfits/bikini/top_large.png"
+# Wife Outfits
+image wife_top_base = "wife/outfits/[wifeTop]/[wifeTop]_base.png"
+image wife_bottoms = "wife/outfits/bottoms/[wifeBottom].png"
+image breasts_outfit:
+    "wife/outfits/[wifeTop]/breasts_%s.png" % wifeDesign["breastNumber"]
+image wife_sleeves_01 = "wife/outfits/[wifeTop]/sleeves_01.png"
 
-image coat_base = "wife/outfits/coat/coat_base.png"
-image jeans = "wife/outfits/coat/jeans.png"
-layeredimage coat_breasts:
-    if wifeDesign["breastNumber"] == "01":
-        "wife/outfits/coat/breasts_small.png"
-    elif wifeDesign["breastNumber"] == "02":
-        "wife/outfits/coat/breasts_medium.png"
-    elif wifeDesign["breastNumber"] == "03":
-        "wife/outfits/coat/breasts_large.png"
-image coat_sleeves = "wife/outfits/coat/sleeves_01.png"
-
+# Other Characters
 image clerk = Placeholder("boy")
+
+# Layered Images
+layeredimage husband:
+    always:
+        "husband_hair_back"
+    always:
+        "husband_head"
+    always:
+        "husband_eyeballs"
+    always:
+        "husband_pupils"
+    always:
+        "husband_nose"
+    always:
+        "husband_mouth"
+    always:
+        "husband_hair_shadow"
+    always:
+        "husband_hair_top"
+    always:
+        "husband_eyebrows"
 
 layeredimage wife:
     always:
-        "hair_back"
+        "wife_hair_back"
     group body:
         attribute base:
-            "body"
-    group bottoms:
-        attribute bikini_bottom:
-            "bikini_bottom"
-        attribute jeans:
-            "jeans"
+            "wife_body"
     always:
-        "arms"
-    group tops:
-        attribute coat_base:
-            "coat_base"
+        "wife_bottoms"
+    always:
+        "wife_arms"
+    always:
+        "wife_top_base"
     group sleeves:
-        attribute coat_sleeves:
-            "coat_sleeves"
+        attribute sleeves_1:
+            "wife_sleeves_01"
     always:
         "breasts"
-    group tops_breasts:
-        attribute bikini_top:
-            "bikini_top"
-        attribute coat_breasts:
-            "coat_breasts"
     always:
-        "head"
+        "breasts_outfit"
     always:
-        "earrings"
+        "wife_head"
     always:
-        "eyeballs"
+        "wife_earrings"
     always:
-        "pupils"
+        "wife_eyeballs"
     always:
-        "nose"
+        "wife_pupils"
     always:
-        "glasses_lenses"
+        "wife_nose"
+    group glasses_lenses:
+        attribute clear_lenses:
+            "wife_glasses_lenses"
+            alpha 0.2
+        attribute foggy_lenses:
+            "wife_glasses_lenses_fog"
     always:
-        "glasses_frames"
+        "wife_glasses_frames"
     group mouth:
         attribute smile:
-            "mouth_smile"
+            "wife_mouth_smile"
         attribute blank:
-            "mouth_blank"
+            "wife_mouth_blank"
     always:
-        "hair_shadow"
+        "wife_hair_shadow"
     always:
-        "hair_top"
+        "wife_hair_top"
     group eyebrows:
         attribute sad:
-            "eyebrows_sad"
+            "wife_eyebrows_sad"
         attribute level:
-            "eyebrows_level"
+            "wife_eyebrows_level"
         attribute mad:
-            "eyebrows_mad"
+            "wife_eyebrows_mad"
 
 # Custom Music Channel
 init python:
     renpy.music.register_channel(name="ambience", mixer="sound", loop=None, stop_on_mute=True)
 
 # Music
+define audio.bedroom_normal = "<loop 6.85>audio/music/Cruising-Back-in-Time.ogg"
 define audio.flashback = "audio/music/Fun-Times_Looping.ogg"
 define audio.lobby = "<loop 4.6>audio/music/Pride_v002.ogg"
 define audio.ominous = "audio/music/Ominous-Underground-Goings-On.ogg"
