@@ -8,6 +8,7 @@
 # Characters
 define c = Character("Clerk", image="clerk", what_prefix='"', what_suffix='"')
 define h = Character("[husband]", what_prefix='"', what_suffix='"')
+define m = Character("Maid", image="maid", what_prefix='"', what_suffix='"')
 define w = Character("[wife]", image="wife", what_prefix='"', what_suffix='"')
 
 # Variables
@@ -49,6 +50,11 @@ default bodyColorW = skinColors[0]
 default pupilColorW = eyeColors[0]
 default earringColorW = earringColors[0]
 default glassesColorW = glassesColors[0]
+
+default wifeHairLengths = {"short": ["01", "02", "03", "05", "06", "10"], "long": ["04", "07", "08", "09"]}
+
+default hairLengthWText = ""
+default hairColorWText = ""
 
 default glassesFog = False
 default husband = ""
@@ -98,13 +104,17 @@ default nextEarringColor = False
 default inputCharacters = "abcdefghijklmnopqrstuvwxyz -ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 # Transforms
+transform left:
+    zoom 0.95
+    xalign 0.25 yalign 1.0
+
 transform middle:
     zoom 0.95
     xalign 0.5 yalign 1.0
 
-transform left:
+transform right:
     zoom 0.95
-    xalign 0.25 yalign 1.0
+    xalign 0.75 yalign 1.0
 
 # Transitions
 define longdissolve = Dissolve(3.0)
@@ -141,6 +151,27 @@ image fade:
     "bg black"
     alpha 0.75
 image good_tales = "Good Tales.png"
+image intro_pan_01:
+    "intro pan/01.png"
+    xalign 1.0
+    linear 30 xalign 0.4
+image intro_pan_02:
+    "intro pan/02.png"
+    xalign 1.0
+    linear 30 xalign 0.3
+image intro_pan_03:
+    "intro pan/03.png"
+    xalign 1.0
+    linear 30 xalign 0.2
+image intro_pan_04:
+    "intro pan/04.png"
+    xalign 1.0
+    linear 30 xalign 0.1
+image intro_pan_05:
+    "intro pan/05.png"
+    xalign 1.0
+    linear 30 xalign 0.0
+image intro_pan_banshee = "intro pan/banshee.png"
 image license = "license.png"
 image title = "title.png"
 
@@ -149,6 +180,8 @@ image bg beach = "backgrounds/beach.png"
 image bg bedroom = "#9ac1ff"
 image bg black = "#000000"
 image bg front_desk = "#f09d00"
+image bg hallway = "#00cb67"
+image bg intro_pan_bg = "#1C203C"
 image bg lobby = "#ae7200"
 layeredimage bg main_menu:
     always:
@@ -165,10 +198,23 @@ layeredimage bg main_menu:
         "gui/main_menu_03.png"
     always:
         "shadow_flicker"
+image bg stairs = "#00cb18"
 image bg resort_exterior = "#004362"
 image bg white = "#ffffff"
 
 # Animated Images
+layeredimage intro_pan:
+    always:
+        "intro_pan_01"
+    always:
+        "intro_pan_02"
+    always:
+        "intro_pan_03"
+    always:
+        "intro_pan_04"
+    always:
+        "intro_pan_05"
+
 image main_menu_figure:
     "gui/main_menu_figure.png"
     yalign 0.55
@@ -191,7 +237,6 @@ image main_menu_figure:
             pause 45
         linear 1 xalign 0.0
     repeat
-
 
 image shadow_flicker:
     "gui/shadow_flicker/01.png"
@@ -228,6 +273,7 @@ image shadow_flicker:
 
 image snowfall_bg = SnowBlossom("snow 02.png", count=300, border=5, xspeed=(0,-75), yspeed=(450,475), start=0, fast=True)
 image snowfall_fg = SnowBlossom("snow 01.png", count=300, border=5, xspeed=(0,-150), yspeed=(500,575), start=0, fast=True)
+image snowfall_window = SnowBlossom("snow 03.png", count=300, border=0, xspeed=(0,-150), yspeed=(500,575), start=0, fast=True)
 
 # Text Images
 image splashtext = ParameterizedText(style="splash")
@@ -322,16 +368,24 @@ image wife_eyebrows_sad:
 image wife_eyebrows_mad:
     "wife/eyebrows/03.png"
     matrixcolor TintMatrix(hairColorW)
+image wife_eyebrows_raised:
+    "wife/eyebrows/04.png"
+    matrixcolor TintMatrix(hairColorW)
+image wife_eyebrows_casual:
+    "wife/eyebrows/05.png"
+    matrixcolor TintMatrix(hairColorW)
 
 # Wife Outfits
 image wife_top_base = "wife/outfits/[wifeTop]/[wifeTop]_base.png"
 image wife_bottoms = "wife/outfits/bottoms/[wifeBottom].png"
 image breasts_outfit:
     "wife/outfits/[wifeTop]/breasts_%s.png" % wifeDesign["breastNumber"]
-image wife_sleeves_01 = "wife/outfits/[wifeTop]/sleeves_01.png"
+image wife_sleeves:
+    "wife/outfits/[wifeTop]/sleeves_%s.png" % wifeDesign["armNumber"]
 
 # Other Characters
 image clerk = Placeholder("boy")
+image maid = Placeholder("girl")
 
 # Layered Images
 layeredimage husband:
@@ -366,9 +420,8 @@ layeredimage wife:
         "wife_arms"
     always:
         "wife_top_base"
-    group sleeves:
-        attribute sleeves_1:
-            "wife_sleeves_01"
+    always:
+        "wife_sleeves"
     always:
         "breasts"
     always:
@@ -383,12 +436,11 @@ layeredimage wife:
         "wife_pupils"
     always:
         "wife_nose"
-    group glasses_lenses:
-        attribute clear_lenses:
-            "wife_glasses_lenses"
-            alpha 0.2
-        attribute foggy_lenses:
-            "wife_glasses_lenses_fog"
+    if glassesFog:
+        "wife_glasses_lenses_fog"
+    else:
+        "wife_glasses_lenses"
+        alpha 0.2   
     always:
         "wife_glasses_frames"
     group mouth:
@@ -407,6 +459,10 @@ layeredimage wife:
             "wife_eyebrows_level"
         attribute mad:
             "wife_eyebrows_mad"
+        attribute raised:
+            "wife_eyebrows_raised"
+        attribute casual:
+            "wife_eyebrows_casual"
 
 # Custom Music Channel
 init python:
@@ -414,6 +470,7 @@ init python:
 
 # Music
 define audio.bedroom_normal = "<loop 6.85>audio/music/Cruising-Back-in-Time.ogg"
+define audio.fighting = "audio/music/The-Runaway_Looping.ogg"
 define audio.flashback = "audio/music/Fun-Times_Looping.ogg"
 define audio.lobby = "<loop 4.6>audio/music/Pride_v002.ogg"
 define audio.ominous = "audio/music/Ominous-Underground-Goings-On.ogg"
@@ -421,9 +478,12 @@ define audio.spooky = "audio/music/More Sewer Creepers_Looping.ogg"
 define audio.title = "<loop 7.8>audio/music/Another-Case-for-the-Inspector.ogg"
 
 # Sound Effects
+define audio.banshee_screem = "audio/se/banshee_scream.ogg"
 define audio.beach_ambience = "audio/se/beach_ambience.ogg"
+define audio.cart = "audio/se/cart.ogg"
 define audio.door_creak_long = "audio/se/door_creak_long.ogg"
 define audio.door_creak_short = "audio/se/door_creak_short.ogg"
+define audio.door_slam = "audio/se/door_slam.ogg"
 define audio.footsteps_snow = "audio/se/footsteps_snow.ogg"
 define audio.wind = "audio/se/wind.ogg"
 
