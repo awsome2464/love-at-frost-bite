@@ -57,6 +57,7 @@ default hairLengthWText = ""
 default hairColorWText = ""
 
 default glassesFog = False
+default glassesOn = True
 default husband = ""
 default surname = ""
 default wife = ""
@@ -112,11 +113,27 @@ transform middle:
     zoom 0.95
     xalign 0.5 yalign 1.0
 
+transform middle_close:
+    zoom 1.25
+    xalign 0.5 yalign 0.0
+
+transform middle_close_shiver:
+    zoom 1.25
+    xalign 0.4975 yalign 0.0
+    linear 0.1 xalign 0.5035
+    linear 0.1 xalign 0.4975
+    repeat
+
 transform right:
     zoom 0.95
     xalign 0.75 yalign 1.0
 
 # Transitions
+define eyes_close_fast = ImageDissolve(image="eyelids.png", time=0.1, ramplen=8, reverse=True, alpha=True, time_warp=None)
+define eyes_close_slow = ImageDissolve(image="eyelids.png", time=1.0, ramplen=8, reverse=True, alpha=True, time_warp=None)
+define eyes_open_fast = ImageDissolve(image="eyelids.png", time=0.1, ramplen=8, reverse=False, alpha=True, time_warp=None)
+define eyes_open_slow = ImageDissolve(image="eyelids.png", time=1.0, ramplen=8, reverse=False, alpha=True, time_warp=None)
+define fastdissolve = Dissolve(0.25)
 define longdissolve = Dissolve(3.0)
 define meddissolve = Dissolve(1.5)
 define snowwipe_fast = ImageDissolve(image="snowwipe.png", time=0.25, ramplen=8, reverse=False, alpha=True, time_warp=None)
@@ -177,7 +194,6 @@ image title = "title.png"
 
 # Backgrounds
 image bg beach = "backgrounds/beach.png"
-image bg bedroom = "#9ac1ff"
 image bg black = "#000000"
 image bg front_desk = "#f09d00"
 image bg hallway = "#00cb67"
@@ -203,6 +219,14 @@ image bg resort_exterior = "#004362"
 image bg white = "#ffffff"
 
 # Animated Images
+layeredimage bg bedroom_default:
+    always:
+        "bg intro_pan_bg"
+    always:
+        "snowfall_window"
+    always:
+        "backgrounds/bedroom_default.png"
+
 layeredimage intro_pan:
     always:
         "intro_pan_01"
@@ -438,11 +462,18 @@ layeredimage wife:
         "wife_nose"
     if glassesFog:
         "wife_glasses_lenses_fog"
+    elif not glassesOn:
+        "wife_glasses_lenses"
+        alpha 0.0
     else:
         "wife_glasses_lenses"
         alpha 0.2   
-    always:
+    if glassesOn:
         "wife_glasses_frames"
+        alpha 1.0
+    else:
+        "wife_glasses_frames"
+        alpha 0.0
     group mouth:
         attribute smile:
             "wife_mouth_smile"
@@ -474,18 +505,19 @@ define audio.fighting = "audio/music/The-Runaway_Looping.ogg"
 define audio.flashback = "audio/music/Fun-Times_Looping.ogg"
 define audio.lobby = "<loop 4.6>audio/music/Pride_v002.ogg"
 define audio.ominous = "audio/music/Ominous-Underground-Goings-On.ogg"
-define audio.spooky = "audio/music/More Sewer Creepers_Looping.ogg"
+define audio.spooky = "audio/music/More-Sewer-Creepers.ogg"
 define audio.title = "<loop 7.8>audio/music/Another-Case-for-the-Inspector.ogg"
 
 # Sound Effects
-define audio.banshee_screem = "audio/se/banshee_scream.ogg"
+define audio.banshee_scream = "audio/se/banshee_scream.ogg"
 define audio.beach_ambience = "audio/se/beach_ambience.ogg"
+define audio.bed_spring = "audio/se/bed_spring.ogg"
 define audio.cart = "audio/se/cart.ogg"
 define audio.door_creak_long = "audio/se/door_creak_long.ogg"
 define audio.door_creak_short = "audio/se/door_creak_short.ogg"
 define audio.door_slam = "audio/se/door_slam.ogg"
 define audio.footsteps_snow = "audio/se/footsteps_snow.ogg"
-define audio.wind = "audio/se/wind.ogg"
+define audio.wind = "<loop 1>audio/se/wind.ogg"
 
 
 label splashscreen:
@@ -505,7 +537,7 @@ label splashscreen:
     return
 
 label before_main_menu:
-    if renpy.music.get_playing("sound") != "audio/se/wind.ogg":
+    if renpy.music.get_playing("sound") != audio.wind:
         play sound wind loop
     if not persistent.splash:
         show expression im.Data(persistent.transitionScreenshot, "screenshot.png"):
@@ -531,3 +563,22 @@ label main_menu:
     show screen custom_main_menu
     with dissolve
     pause
+
+label random_wife_devtest:
+    python:
+        bodyColorW = renpy.random.choice(skinColors)
+        hairColorW = renpy.random.choice(hairColors)
+        pupilColorW = renpy.random.choice(eyeColors)
+        earringColorW = renpy.random.choice(earringColors)
+        glassesColorW = renpy.random.choice(glassesColors)
+        wifeDesign["breastNumber"] = renpy.random.choice(breastSizes)
+        wifeDesign["eyeballNumber"] = renpy.random.choice(eyeShapesW)
+        wifeDesign["hairNumber"] = renpy.random.choice(hairStylesW)
+        wifeDesign["mouthNumber"] = renpy.random.choice(mouthShapesW)
+        wifeDesign["noseNumber"] = renpy.random.choice(noseShapesW)
+        wifeDesign["headNumber"] = renpy.random.choice(headShapesW)
+        wifeDesign["pupilNumber"] = renpy.random.choice(pupilShapesW)
+        wifeDesign["earringNumber"] = renpy.random.choice(earringStylesW)
+        wifeDesign["glassesNumber"] = renpy.random.choice(glassesStylesW)
+    show wife
+    return

@@ -244,3 +244,5 @@ screen custom_main_menu():
         imagebutton auto "gui/menu_buttons/quit_%s.png" action Quit(confirm=not main_menu)
     text "©2022 Good Tales" xalign 0.99 yalign 0.99
 
+screen devlog():
+    textbutton "Randomize Wife" xalign 1.0 yalign 0.0 action Call("random_wife_devtest")

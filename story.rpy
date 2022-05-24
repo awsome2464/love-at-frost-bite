@@ -25,7 +25,7 @@ label start:
     play music lobby
     "Well, we're here."
     "I was honestly worried that we weren't going to make it; the roads were much worse than predicted."
-    "Even getting from the car to the door was a hassle; there had to have been at least a foot of snow out there!"
+    "Even getting from the car to the door was a hassle; the snow was almost up to my knees!"
     "It almost makes me regret deciding to take a vacation in the winter..."
     "...but I know that she prefers this sort of atmosphere as opposed to a tropical resort."
     "Of course, that doesn't mean she's against such a thing."
@@ -190,7 +190,7 @@ label entered_wife_name:
     h "You can say that again.{w=0.5} Were you able to find a decent parking spot?"
     $glassesFog = False
     w sad "Barely.{w=0.5} It's still quite a walk away."
-    w level "Then again, maybe it just feels that way because I can barely see 3 feet in front of me."
+    w level "Then again, maybe it just feels that way because I can barely see my hands in front of me."
     w mad "Probably would've helped if I had someone out here to look with me."
     h "You're the one who wanted to save time by getting checked in as soon as possible."
     w "I never said it had to be done as soon as we arrived!"
@@ -245,8 +245,7 @@ label entered_wife_name:
     $renpy.music.set_volume(volume=0.1, delay=0, channel='ambience')
     $renpy.music.set_volume(volume=1.0, delay=0, channel="music")
     play ambience wind fadein 3
-    scene bg bedroom
-    show snowfall_window
+    scene bg bedroom_default
     with longdissolve
     $renpy.notify(message="Bedroom")
     pause 1
@@ -340,6 +339,7 @@ label entered_wife_name:
     window hide
     pause 0.5
     play sound door_creak_short
+    $renpy.music.set_volume(volume=0.05, delay=1.5, channel='ambience')
     scene bg hallway with meddissolve
     $renpy.notify(message="Hallway")
     pause 0.5
@@ -354,7 +354,7 @@ label entered_wife_name:
     h "Excuse me, Miss?"
     show maid at middle with dissolve
     m "Yes, Sir?"
-    h "Would you happen to have seen a woman around my age in the halls just now?"
+    h "I'm looking for my wife. Would you happen to have seen her in the halls just now?"
 
     python:
         if wifeDesign["hairNumber"] in wifeHairLengths["short"]:
@@ -381,7 +381,7 @@ label entered_wife_name:
         elif hairColorW == hairColors[9]:
             hairColorWText = "green"
 
-    m "Oh, does this woman have [hairLengthWText] [hairColorWText] hair?"
+    m "Oh, does she have [hairLengthWText] [hairColorWText] hair?"
     h "Yes, that's her."
     m "I just passed her as I came this way.{w=0.2}\nShe was heading towards the stairs."
     h "Alright.{w=0.2} Thank you."
@@ -390,6 +390,117 @@ label entered_wife_name:
     scene bg stairs with meddissolve
     $renpy.notify(message="Stairs")
     "Thankfully, we were on the highest floor, so there was only direction she could've gone."
+    "And I don't hear any footsteps, so she's currently not going down."
+    "The question is which floor did she stop at?"
+
+label wake_up:
+    scene bg black
+    stop music
+    stop sound
+    stop ambience
+    "Scene start"
+    window hide
+    pause 3
+    $renpy.music.set_pan(pan=0, delay=0, channel='sound')
+    $renpy.music.set_volume(volume=0.25, delay=0, channel="sound")
+    play sound banshee_scream
+    pause 0.5
+    scene bg bedroom_default with eyes_open_fast
+    pause 1
+    window show
+    "What the hell...?"
+    "..."
+    $renpy.music.set_volume(volume=0.1, delay=0, channel="ambience")
+    play ambience wind fadein 3
+    play music spooky fadein 3
+    "I laid in bed completely motionless."
+    "Was that a scream?"
+    "It sounded like it came from outside..."
+    $renpy.music.set_volume(volume=1.0, delay=0, channel="sound")
+    play sound bed_spring
+    "I got out of bed and walked towards the window."
+    "..."
+    "I couldn't see much outside; the snow was still pouring down hard."
+    "But from what I {i}could{/i} see, there wasn't anyone there, nor indication that someone {i}was{/i} there."
+    w "[husband]...?"
+    "I could hear [wife] sleepily speak from the bed."
+    $wifeDesign["armNumber"] = "01"
+    $glassesOn = False
+    show wife base level blank at middle with dissolve
+    w "What's wrong?"
+    h "I think I heard someone screaming outside."
+    w sad "What?"
+    "She sat up, seeming more alert now."
+    h "Yeah, but I'm not seeing anything."
+    w level "Well, are you sure you actually heard something?"
+    h "No, not really."
+    w "Well, it seems a bit weird to hear anything over all that wind."
+    h "I guess..."
+    "Maybe it was all my imagination, after all."
+    h "Still, I wonder if it's worth reporting to someone."
+    w "You do whatever you want."
+    "She then laid back down with a yawn."
+    hide wife with dissolve
+    "With the conversation officially over, I walked towards the door."
+    "I then paused right before my hand grabbed the handle."
+    "As much as part of me wanted to help, a large part of me believed that I really was just imagining things."
+    "After all, it's not like I heard a second scream afterwards."
+    "..."
+    stop music fadeout 3
+    "With common sense winning the vote, I approached the bed and laid back down."
+    play sound bed_spring
+    pause 1
+    show wife base level blank at middle_close with dissolve
+    w "Change of heart?"
+    h "Something like that."
+    w "Hm..."
+    "With that, we both closed our eyes and went back to sleep."
+    window hide dissolve
+    pause 0.25
+    scene bg black with eyes_close_slow
+    pause 1
+    window show dissolve
+    "I'm sure I was just freaking myself out over nothing."
+    "Everything will be fine, I'm sure."
+    window hide dissolve
+    pause 1
+    stop ambience fadeout 3
+    pause 5
+    $renpy.music.set_volume(volume=0.5, delay=0, channel="ambience")
+    play ambience wind
+    pause 1
+    scene bg bedroom_default with eyes_open_slow
+    pause 1
+    window show dissolve
+    "What the...???"
+    "It's freezing in here!"
+    h "W-What the hell..."
+    w "Nnn..."
+    "I turned to [wife], who still seemed to be asleep, though had a look of discomfort on her face."
+    h "[wife]!{w=0.2} [wife], wake up!"
+    w "Ah!"
+    show wife base mad blank at middle_close_shiver with dissolve
+    w "W-What the fuck??"
+    w "A-Are we outside??"
+    h "N-No, we're in th-the room."
+    w "W-Well, why the f-fuck is it so damn c-cold??"
+    h "I d-don't know.{w=0.2}\nI d-don't think the window is open..."
+    hide wife with dissolve
+    "I looked at the closed window and saw that, despite the heavy snow, there seemed to be some sort of light in the sky."
+    "Curious about the time, I turned to look at the alarm clock on the side table, only to realize that it was off."
+    "That's when I looked at my phone and saw that it was 8:56 AM."
+    "I also noticed that, despite the fact my phone was plugged in, it was sitting at a 42%% battery life, with no indication that it was charging."
+    h "Fuck.{w=0.2} The power must be out."
+    show wife base mad blank at middle_close_shiver with dissolve
+    w "W-Well, that's just fucking {i}perfect!{/i}"
+    if wifeDesign["glassesNumber"] != "01":
+        "[wife] grabbed her glasses from the side table and put them on as she got out of bed."
+        $glassesOn = True
+        show wife with dissolve
+    else:
+        "[wife] groaned with frustration as she got out of bed."
+    h "W-Where are you going?"
+    w "T-To talk to a worker t-to see what the f-fuck is going on!"
 
 label game_end:
     $takeScreenshot()
